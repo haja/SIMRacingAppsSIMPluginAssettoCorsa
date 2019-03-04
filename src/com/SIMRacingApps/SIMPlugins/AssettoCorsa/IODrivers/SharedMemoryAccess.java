@@ -1,7 +1,5 @@
 package com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers;
 
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.PhysicsMemory;
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.PhysicsMemoryMapper;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Windows;
 
@@ -22,11 +20,11 @@ public class SharedMemoryAccess {
   private Windows.Handle m_hMemMapFile;
   private Windows.Pointer m_pSharedMem;
 
-  public SharedMemoryAccess() {
-    init();
-  }
-
-  private boolean init() {
+  /**
+   * call this method until it returns true
+   * @return true if initialized, flase otherwise;
+   */
+  public boolean init() {
     if (!m_initialized) {
       m_hMemMapFile = Windows.openFileMapping(MEMMAPFILENAME_PHYSICS);
 
@@ -59,12 +57,15 @@ public class SharedMemoryAccess {
     return m_initialized;
   }
 
-  public PhysicsMemory read() {
-    return PhysicsMemoryMapper.map(m_pSharedMem);
+  public PhysicsMemory readPhysics() throws NotInitializedException {
+    if (m_initialized) {
+      return PhysicsMemoryMapper.map(m_pSharedMem);
+    }
+    throw new NotInitializedException();
   }
 
   public void close() {
-    if (!m_initialized) {
+    if (m_initialized) {
       Windows.unmapViewOfFile(m_pSharedMem);
       Windows.closeHandle(m_hMemMapFile);
       m_initialized = false;
@@ -74,5 +75,8 @@ public class SharedMemoryAccess {
   public void finalize() throws Throwable {
     close();
     super.finalize();
+  }
+
+  public class NotInitializedException extends Exception {
   }
 }

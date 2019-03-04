@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa;
+package com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers;
 
 import com.SIMRacingApps.Windows;
 
@@ -16,6 +16,7 @@ public class PhysicsMemoryMapper {
   private static final long PHYSICS_BUFFER_SIZE = 6 * 4;
 
   public static PhysicsMemory map(Windows.Pointer sharedMemory) {
+    // TODO how do we know that the memory is still accessible?
     final ByteBuffer b =
         sharedMemory.getByteBuffer(0, PHYSICS_BUFFER_SIZE).asReadOnlyBuffer();
     return new PhysicsMemory(
