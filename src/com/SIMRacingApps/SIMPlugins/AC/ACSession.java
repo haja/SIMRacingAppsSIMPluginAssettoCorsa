@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa;
+package com.SIMRacingApps.SIMPlugins.AC;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Server;
@@ -12,10 +12,10 @@ import com.SIMRacingApps.Session;
  */
 public class ACSession extends Session {
 
-  private final ACSimPlugin m_simPlugin;
+  private final ACSIMPlugin m_simPlugin;
   private final ACCar m_carSelf;
 
-  public ACSession(ACSimPlugin simPlugin) {
+  public ACSession(ACSIMPlugin simPlugin) {
     super(simPlugin);
     m_simPlugin = simPlugin;
     m_carSelf = new ACCar(m_simPlugin);

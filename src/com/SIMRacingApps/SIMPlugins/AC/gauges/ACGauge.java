@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa.gauges;
+package com.SIMRacingApps.SIMPlugins.AC.gauges;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Gauge;

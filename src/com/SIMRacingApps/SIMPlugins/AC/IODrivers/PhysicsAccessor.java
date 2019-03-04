@@ -1,6 +1,6 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers;
+package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers.SharedMemoryAccess.NotInitializedException;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess.NotInitializedException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +16,7 @@ public class PhysicsAccessor {
 
   public static final long PHYSICS_UPDATE_PERIOD = 10L;
 
-  private Timer timer;
+  private Timer timer = null;
 
   private final Consumer<PhysicsMemory> physicsMemoryConsumer;
   private final Runnable stopNotifier;
@@ -32,8 +32,12 @@ public class PhysicsAccessor {
   }
 
   public void stop() {
-    timer.cancel();
-    stopNotifier.run();
+    if (timer != null) {
+      timer.cancel();
+    }
+    if (stopNotifier != null) {
+      stopNotifier.run();
+    }
   }
 
   private class PhysicsTask extends TimerTask {

@@ -1,8 +1,8 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa;
+package com.SIMRacingApps.SIMPlugins.AC;
 
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers.PhysicsAccessor;
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers.PhysicsMemory;
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers.SharedMemoryAccess;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsAccessor;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsMemory;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess;
 
 public class ACInternals {
 

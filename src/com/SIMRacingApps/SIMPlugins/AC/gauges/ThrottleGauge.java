@@ -1,9 +1,9 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa.gauges;
+package com.SIMRacingApps.SIMPlugins.AC.gauges;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Data.State;
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.ACSimPlugin;
+import com.SIMRacingApps.SIMPlugins.AC.ACSIMPlugin;
 
 /**
  * @author Harald Jagenteufel
@@ -13,9 +13,9 @@ import com.SIMRacingApps.SIMPlugins.AssettoCorsa.ACSimPlugin;
  */
 public class ThrottleGauge extends ACGauge {
 
-  private final ACSimPlugin m_plugin;
+  private final ACSIMPlugin m_plugin;
 
-  public ThrottleGauge(ACSimPlugin plugin, Car car) {
+  public ThrottleGauge(ACSIMPlugin plugin, Car car) {
     super(Type.THROTTLE, car, null, null, null);
     m_plugin = plugin;
   }

@@ -1,8 +1,8 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa;
+package com.SIMRacingApps.SIMPlugins.AC;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Gauge;
-import com.SIMRacingApps.SIMPlugins.AssettoCorsa.gauges.ThrottleGauge;
+import com.SIMRacingApps.SIMPlugins.AC.gauges.ThrottleGauge;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,11 +15,11 @@ import java.util.TreeMap;
  */
 public class ACCar extends Car {
 
-  private final ACSimPlugin m_simPlugin;
+  private final ACSIMPlugin m_simPlugin;
 
   protected Map<String, Gauge> m_gauges = new TreeMap<>();
 
-  public ACCar(ACSimPlugin SIMPlugin) {
+  public ACCar(ACSIMPlugin SIMPlugin) {
     super(SIMPlugin);
     m_simPlugin = SIMPlugin;
     _initialize();

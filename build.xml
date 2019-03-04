@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="sra" name="SIMRacingApps-SIMPlugin-AssettoCorsa">
-    <property name="plugin.name" value="AssettoCorsa" />
+<project basedir="." default="sra" name="SIMRacingApps-SIMPlugin-AC">
+    <property name="plugin.name" value="AC" />
     <tstamp>
         <format property="build.time" pattern="yyyy.MM.dd.HH.mm.ss" />
     </tstamp>
@@ -14,6 +14,7 @@
     <property environment="env"/>
     <property name="ECLIPSE_HOME" value="../../../../PortableApps/EclipsePortable/App/Eclipse/"/>
     <property name="SIMRacingAppsServer.location" value="../SIMRacingAppsServer"/>
+    <property name="plugin.dir" value="${user.home}/Documents/SIMRacingApps" />
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.8"/>
     <property name="source" value="1.8"/>
@@ -70,5 +71,10 @@
         <property file="${version.properties}" prefix="version" />
         <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
         <zip destfile="${java.io.tmpdir}/SIMRacingAppsPlugin-${plugin.name}.sra" basedir="classes" />
+    </target>
+    <target name="installAsPlugin" depends="build">
+        <property file="${version.properties}" prefix="version" />
+        <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
+        <copydir dest="${plugin.dir}" src="classes" />
     </target>
 </project>

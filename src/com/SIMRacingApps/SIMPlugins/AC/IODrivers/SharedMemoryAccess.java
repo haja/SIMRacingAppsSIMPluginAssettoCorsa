@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa.IODrivers;
+package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Windows;

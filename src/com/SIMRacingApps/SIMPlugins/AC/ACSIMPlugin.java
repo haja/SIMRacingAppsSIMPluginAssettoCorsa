@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.SIMRacingApps.SIMPlugins.AssettoCorsa;
+package com.SIMRacingApps.SIMPlugins.AC;
 
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Data.State;
@@ -15,12 +15,12 @@ import com.SIMRacingApps.Session;
  * @since 1.8
  * @license Apache License 2.0
  */
-public class ACSimPlugin extends SIMPlugin {
+public class ACSIMPlugin extends SIMPlugin {
 
   private ACInternals m_internals;
   private ACSession m_session;
 
-  public ACSimPlugin() throws SIMPluginException {
+  public ACSIMPlugin() throws SIMPluginException {
     m_internals = new ACInternals();
     m_session = new ACSession(this);
     Server.logger().info("AssettoCorsaSIMPluging created");
