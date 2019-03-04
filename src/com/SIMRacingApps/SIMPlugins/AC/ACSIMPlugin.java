@@ -39,7 +39,7 @@ public class ACSIMPlugin extends SIMPlugin {
 
   @Override
   public Session getSession() {
-    Server.logger().info("AssettoCorsaSIMPluging getSession called - not implemented");
+    // TODO implement proper session
     return m_session;
   }
 
@@ -49,8 +49,12 @@ public class ACSIMPlugin extends SIMPlugin {
   }
 
   protected boolean waitForDataReady() {
+    if (!init()) {
+      return false;
+    }
     try {
-      Thread.sleep(16L);
+      // TODO how much sleep is needed?
+      Thread.sleep(100L);
     } catch (InterruptedException e) {
     }
     return init();

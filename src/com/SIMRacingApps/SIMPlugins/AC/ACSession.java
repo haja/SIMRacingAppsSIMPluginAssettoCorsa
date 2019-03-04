@@ -3,6 +3,7 @@ package com.SIMRacingApps.SIMPlugins.AC;
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Session;
+import com.SIMRacingApps.Track;
 
 /**
  * @author Harald Jagenteufel
@@ -22,7 +23,13 @@ public class ACSession extends Session {
     Server.logger().info("Assetto Corsa Session Created");
   }
 
+  @Override
   public Car getCar(String car) {
     return m_carSelf;
+  }
+
+  @Override
+  public Track getTrack() {
+    return new ACTrack(m_simPlugin);
   }
 }

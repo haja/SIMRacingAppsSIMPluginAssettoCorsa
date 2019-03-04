@@ -26,12 +26,14 @@ public class SharedMemoryAccess {
    */
   public boolean init() {
     if (!m_initialized) {
+      Server.logger().info("ACSharedMemoryAccess init");
       m_hMemMapFile = Windows.openFileMapping(MEMMAPFILENAME_PHYSICS);
 
       if (m_hMemMapFile != null) {
         m_pSharedMem = Windows.mapViewOfFile(m_hMemMapFile);
 
         if (m_pSharedMem != null) {
+          Server.logger().info("ACSharedMemoryAccess init done");
           // TODO is this all?
           m_initialized = true;
         }

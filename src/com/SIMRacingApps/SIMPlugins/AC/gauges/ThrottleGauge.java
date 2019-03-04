@@ -4,6 +4,7 @@ import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Data.State;
 import com.SIMRacingApps.SIMPlugins.AC.ACSIMPlugin;
+import com.SIMRacingApps.SIMPlugins.AC.ACTrack;
 
 /**
  * @author Harald Jagenteufel
@@ -16,7 +17,7 @@ public class ThrottleGauge extends ACGauge {
   private final ACSIMPlugin m_plugin;
 
   public ThrottleGauge(ACSIMPlugin plugin, Car car) {
-    super(Type.THROTTLE, car, null, null, null);
+    super(Type.THROTTLE, car, new ACTrack(plugin), null, null);
     m_plugin = plugin;
   }
 

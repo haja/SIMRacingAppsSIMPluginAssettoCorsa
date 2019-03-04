@@ -3,6 +3,7 @@ package com.SIMRacingApps.SIMPlugins.AC;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsAccessor;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsMemory;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess;
+import com.SIMRacingApps.Server;
 
 public class ACInternals {
 
@@ -34,9 +35,11 @@ public class ACInternals {
   }
 
   private boolean _init() {
+    Server.logger().info("ACInternals _init");
     SharedMemoryAccess shm = new SharedMemoryAccess();
     if (shm.init()) {
       physicsAccessor.start(shm);
+      initialized = true;
       return true;
     }
     return false;
