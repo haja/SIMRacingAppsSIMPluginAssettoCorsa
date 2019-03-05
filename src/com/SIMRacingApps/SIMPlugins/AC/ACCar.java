@@ -2,7 +2,7 @@ package com.SIMRacingApps.SIMPlugins.AC;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Gauge;
-import com.SIMRacingApps.SIMPlugins.AC.gauges.ThrottleGauge;
+import com.SIMRacingApps.SIMPlugins.gauges.ThrottleGauge;
 
 import java.util.Map;
 import java.util.TreeMap;

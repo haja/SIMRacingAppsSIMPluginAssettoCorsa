@@ -1,5 +1,6 @@
-package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
+package com.SIMRacingApps.SIMPlugins.IODrivers;
 
+import com.SIMRacingApps.SIMPlugins.IODrivers.jnaerator.SPageFilePhysics;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Windows;
 
@@ -59,7 +60,7 @@ public class SharedMemoryAccess {
     return m_initialized;
   }
 
-  public PhysicsMemory readPhysics() throws NotInitializedException {
+  public SPageFilePhysics readPhysics() throws NotInitializedException {
     if (m_initialized) {
       return PhysicsMemoryMapper.map(m_pSharedMem);
     }

@@ -28,7 +28,7 @@ public class ACSIMPlugin extends SIMPlugin {
 
   @Override
   public Data getSIMName() {
-    return super.getSIMName().setValue("AC").setState(Data.State.NORMAL);
+    return super.getSIMName().setValue("com/SIMRacingApps/SIMPlugins/AC").setState(Data.State.NORMAL);
   }
 
   @Override

@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.AC.gauges;
+package com.SIMRacingApps.SIMPlugins.gauges;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Data;

@@ -1,14 +1,14 @@
 package com.SIMRacingApps.SIMPlugins.AC;
 
-import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsAccessor;
-import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsMemory;
-import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess;
+import com.SIMRacingApps.SIMPlugins.IODrivers.PhysicsAccessor;
+import com.SIMRacingApps.SIMPlugins.IODrivers.SharedMemoryAccess;
+import com.SIMRacingApps.SIMPlugins.IODrivers.jnaerator.SPageFilePhysics;
 import com.SIMRacingApps.Server;
 
 public class ACInternals {
 
   private final PhysicsAccessor physicsAccessor;
-  private PhysicsMemory currentPhysics;
+  private SPageFilePhysics currentPhysics;
   private volatile boolean initialized = false;
 
   ACInternals() {
@@ -23,7 +23,7 @@ public class ACInternals {
     return true;
   }
 
-  public PhysicsMemory getCurrentPhysics() {
+  public SPageFilePhysics getCurrentPhysics() {
     return currentPhysics;
   }
 
