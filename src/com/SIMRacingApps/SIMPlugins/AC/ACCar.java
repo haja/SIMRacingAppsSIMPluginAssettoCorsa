@@ -14,33 +14,34 @@ import com.SIMRacingApps.SIMPlugins.AC.gauges.*;
  */
 public class ACCar extends Car {
 
-  private final ACSIMPlugin simPlugin;
+  private final ACSIMPlugin plugin;
   private boolean valid = false;
 
   public ACCar(ACSIMPlugin SIMPlugin) {
     super(SIMPlugin);
-    simPlugin = SIMPlugin;
+    plugin = SIMPlugin;
     initialize();
   }
 
   public void initialize() {
-    if (!simPlugin.internals().isSessionRunning()) {
+    if (!plugin.internals().isSessionRunning()) {
       return;
     }
 
-    _setGauge(new Throttle(simPlugin, this));
-    _setGauge(new Brake(simPlugin, this));
-    _setGauge(new Clutch(simPlugin, this));
-    _setGauge(new BrakeBias(simPlugin, this));
-    final Gear gear = new Gear(simPlugin, this);
+    _setGauge(new Throttle(plugin, this));
+    _setGauge(new Brake(plugin, this));
+    _setGauge(new Clutch(plugin, this));
+    _setGauge(new BrakeBias(plugin, this));
+    final Gear gear = new Gear(plugin, this);
     _setGauge(gear);
-    _setGauge(new Tachometer(simPlugin, this, gear));
-    _setGauge(new Speedometer(simPlugin, this));
-    _setGauge(new EnginePower(simPlugin, this));
+    _setGauge(new Tachometer(plugin, this, gear));
+    _setGauge(new Speedometer(plugin, this));
+    _setGauge(new EnginePower(plugin, this));
 
     // TODO fix id loading
     m_id = 1;
-    m_name = "my super car";
+    m_name = String.valueOf(plugin.internals().getSessionStatic().carModel);
+    m_description = String.valueOf(plugin.internals().getSessionStatic().carModel);
     m_carIdentifier = "I1";
 
     valid = true;
@@ -49,7 +50,7 @@ public class ACCar extends Car {
 
   @Override
   public boolean isValid() {
-    return valid && simPlugin.isConnected();
+    return valid && plugin.isConnected();
   }
 
   @Override
@@ -69,4 +70,31 @@ public class ACCar extends Car {
     m_gauges.put(gauge.getType().getString().toLowerCase(), gauge);
   }
 
+  @Override
+  public Data getPosition() {
+    Data position = super.getPosition();
+    setValue(position, plugin.internals().getCurrentGraphics().position);
+    return position;
+  }
+
+  @Override
+  public Data getLapTime(String lapType, int lapsToAverage) {
+    Data d = super.getLapTime(lapType, lapsToAverage);
+    String reference = d.getValue("reference").toString();
+    if (reference.equals(LapType.BEST)) {
+      setValue(d, plugin.internals().getCurrentGraphics().iBestTime);
+    }
+    if (reference.equals(LapType.CURRENT)) {
+      setValue(d, plugin.internals().getCurrentGraphics().iCurrentTime);
+    }
+    // TODO implement complex lap timings, save lap times
+    return d;
+  }
+
+  private void setValue(Data data, Object val) {
+    if (plugin.isConnected()) {
+      data.setValue(val);
+      data.setState(State.NORMAL);
+    }
+  }
 }

@@ -1,5 +1,6 @@
 package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFileGraphic;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFilePhysics;
 import com.SIMRacingApps.Server;
 import com.sun.jna.Pointer;
@@ -13,13 +14,13 @@ import java.util.function.Consumer;
  * @since 1.8
  * @license Apache License 2.0
  */
-public class PhysicsAccessor extends TimedShmAccessor<SPageFilePhysics> {
+public class GraphicsAccessor extends TimedShmAccessor<SPageFileGraphic> {
 
-  private final static String MEMMAPFILENAME_PHYSICS = "Local\\acpmf_physics";
-  private final static long PHYSICS_UPDATE_PERIOD = 10L;
+  private final static String MEMMAPFILENAME_GRAPHICS = "Local\\acpmf_graphics";
+  private final static long GRAPHICS_UPDATE_PERIOD = 1000L;
 
-  public PhysicsAccessor(Consumer<SPageFilePhysics> physicsMemoryConsumer, Runnable stopNotifier) {
-    super(physicsMemoryConsumer, stopNotifier);
+  public GraphicsAccessor(Consumer<SPageFileGraphic> graphicsConsumer, Runnable stopNotifier) {
+    super(graphicsConsumer, stopNotifier);
   }
 
   @Override
@@ -29,17 +30,17 @@ public class PhysicsAccessor extends TimedShmAccessor<SPageFilePhysics> {
 
   @Override
   protected String getMemMapFileName() {
-    return MEMMAPFILENAME_PHYSICS;
+    return MEMMAPFILENAME_GRAPHICS;
   }
 
   @Override
-  protected SPageFilePhysics supplyStruct(Pointer pointer) {
-    return new SPageFilePhysics(pointer);
+  protected SPageFileGraphic supplyStruct(Pointer pointer) {
+    return new SPageFileGraphic(pointer);
   }
 
   @Override
   protected long getUpdatePeriod() {
-    return PhysicsAccessor.PHYSICS_UPDATE_PERIOD;
+    return GraphicsAccessor.GRAPHICS_UPDATE_PERIOD;
   }
 
   private class PhysicsTask extends TimerTask {
@@ -52,9 +53,9 @@ public class PhysicsAccessor extends TimedShmAccessor<SPageFilePhysics> {
     @Override
     public void run() {
       try {
-        final SPageFilePhysics physics = sharedMemory.readStruct();
-        consumer.accept(physics);
-        Server.logger().finest("ACPhysicsAccessor read gas: " + physics.gas);
+        final SPageFileGraphic graphics = sharedMemory.readStruct();
+        consumer.accept(graphics);
+        Server.logger().finest("ACGraphicsAccessor read position: " + graphics.position);
       } catch (NotInitializedException e) {
         sharedMemory.close();
         stop();

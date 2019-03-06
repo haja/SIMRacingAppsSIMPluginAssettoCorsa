@@ -1,10 +1,9 @@
 package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
-import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess.NotInitializedException;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFileStatic;
 import com.SIMRacingApps.Server;
+import com.sun.jna.Pointer;
 
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
@@ -14,29 +13,35 @@ import java.util.function.Consumer;
  * @since 1.8
  * @license Apache License 2.0
  */
-// TODO factor out accessor code
-public class SessionAccessor {
+public class SessionAccessor extends TimedShmAccessor<SPageFileStatic> {
 
+  private final static String MEMMAPFILENAME_SESSION = "Local\\acpmf_static";
   // TODO this should be once per session. how to do that?
   public static final long SESSION_UPDATE_PERIOD = 5000L;
 
-  private Timer timer = null;
-
-  private final Consumer<SPageFileStatic> staticConsumer;
-
-  public SessionAccessor(Consumer<SPageFileStatic> staticConsumer) {
-    this.staticConsumer = staticConsumer;
+  public SessionAccessor(Consumer<SPageFileStatic> staticConsumer, Runnable stopNotifier) {
+    super(staticConsumer, stopNotifier);
   }
 
-  public void start(SharedMemoryAccess shm) {
-    timer = new Timer("AC-static-session-timer");
-    timer.scheduleAtFixedRate(new SessionStaticTask(shm), 0L, SESSION_UPDATE_PERIOD);
+
+  @Override
+  protected long getUpdatePeriod() {
+    return SESSION_UPDATE_PERIOD;
   }
 
-  public void stop() {
-    if (timer != null) {
-      timer.cancel();
-    }
+  @Override
+  protected TimerTask getTask(SharedMemoryAccess shm) {
+    return new SessionStaticTask(shm);
+  }
+
+  @Override
+  protected String getMemMapFileName() {
+    return MEMMAPFILENAME_SESSION;
+  }
+
+  @Override
+  protected SPageFileStatic supplyStruct(Pointer pointer) {
+    return new SPageFileStatic(pointer);
   }
 
   private class SessionStaticTask extends TimerTask {
@@ -49,8 +54,8 @@ public class SessionAccessor {
     @Override
     public void run() {
       try {
-        final SPageFileStatic session = sharedMemory.readStatic();
-        staticConsumer.accept(session);
+        final SPageFileStatic session = sharedMemory.readStruct();
+        consumer.accept(session);
         Server.logger().finest(
             "ACStaticSessionAccessor AC version: " + new String(session.acVersion));
       } catch (NotInitializedException e) {

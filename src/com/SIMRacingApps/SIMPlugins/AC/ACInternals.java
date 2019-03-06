@@ -1,8 +1,9 @@
 package com.SIMRacingApps.SIMPlugins.AC;
 
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.GraphicsAccessor;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.PhysicsAccessor;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SessionAccessor;
-import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFileGraphic;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFilePhysics;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFileStatic;
 import com.SIMRacingApps.Server;
@@ -11,8 +12,10 @@ public class ACInternals {
 
   private final PhysicsAccessor physicsAccessor;
   private final SessionAccessor sessionAccessor;
+  private final GraphicsAccessor graphicsAccessor;
   private SPageFilePhysics currentPhysics;
   private SPageFileStatic sessionStatic;
+  private SPageFileGraphic currentGraphics;
   private volatile boolean initialized = false;
 
   ACInternals() {
@@ -21,7 +24,10 @@ public class ACInternals {
         , () -> this.initialized = false);
     sessionAccessor = new SessionAccessor(
         sess -> this.sessionStatic = sess
-    );
+        , () -> {});
+    graphicsAccessor = new GraphicsAccessor(
+        graph -> this.currentGraphics = graph
+        , () -> {});
   }
 
   public boolean isSessionRunning() {
@@ -38,6 +44,10 @@ public class ACInternals {
     return sessionStatic;
   }
 
+  public SPageFileGraphic getCurrentGraphics() {
+    return currentGraphics;
+  }
+
   public boolean init() {
     if (initialized) {
       return true;
@@ -47,18 +57,16 @@ public class ACInternals {
 
   private boolean _init() {
     Server.logger().info("ACInternals _init");
-    SharedMemoryAccess shm = new SharedMemoryAccess();
-    if (shm.init()) {
-      physicsAccessor.start(shm);
-      sessionAccessor.start(shm);
-      initialized = true;
-      return true;
-    }
-    return false;
+    initialized = physicsAccessor.start() &&
+        sessionAccessor.start() &&
+        graphicsAccessor.start();
+    return initialized;
   }
 
   public void close() {
     this.initialized = false;
     physicsAccessor.stop();
+    sessionAccessor.stop();
+    graphicsAccessor.stop();
   }
 }
