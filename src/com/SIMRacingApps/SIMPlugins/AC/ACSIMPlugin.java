@@ -21,6 +21,7 @@ public class ACSIMPlugin extends SIMPlugin {
   private ACSession m_session;
 
   public ACSIMPlugin() throws SIMPluginException {
+    super();
     m_internals = new ACInternals();
     m_session = new ACSession(this);
     Server.logger().info("AssettoCorsaSIMPluging created");
@@ -28,7 +29,7 @@ public class ACSIMPlugin extends SIMPlugin {
 
   @Override
   public Data getSIMName() {
-    return super.getSIMName().setValue("com/SIMRacingApps/SIMPlugins/AC").setState(Data.State.NORMAL);
+    return super.getSIMName().setValue("AC").setState(Data.State.NORMAL);
   }
 
   @Override
@@ -62,7 +63,7 @@ public class ACSIMPlugin extends SIMPlugin {
 
   protected boolean isConnected() {
     // TODO detect if connection was successful
-    return init();
+    return internals().isSessionRunning();
   }
 
   private boolean init() {

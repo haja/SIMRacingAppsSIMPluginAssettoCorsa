@@ -1,7 +1,7 @@
-package com.SIMRacingApps.SIMPlugins.IODrivers;
+package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
-import com.SIMRacingApps.SIMPlugins.IODrivers.SharedMemoryAccess.NotInitializedException;
-import com.SIMRacingApps.SIMPlugins.IODrivers.jnaerator.SPageFilePhysics;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.SharedMemoryAccess.NotInitializedException;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFilePhysics;
 import com.SIMRacingApps.Server;
 
 import java.util.Timer;
@@ -16,8 +16,7 @@ import java.util.function.Consumer;
  */
 public class PhysicsAccessor {
 
-  // TODO this should be 10 milisec instead
-  public static final long PHYSICS_UPDATE_PERIOD = 1000L;
+  public static final long PHYSICS_UPDATE_PERIOD = 10L;
 
   private Timer timer = null;
 
@@ -55,7 +54,7 @@ public class PhysicsAccessor {
       try {
         final SPageFilePhysics physics = sharedMemory.readPhysics();
         physicsMemoryConsumer.accept(physics);
-        Server.logger().info("ACPhysicsAccessor read: " + physics.gas);
+        Server.logger().finest("ACPhysicsAccessor read gas: " + physics.gas);
       } catch (NotInitializedException e) {
         sharedMemory.close();
         stop();

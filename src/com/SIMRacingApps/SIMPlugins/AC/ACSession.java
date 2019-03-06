@@ -1,9 +1,7 @@
 package com.SIMRacingApps.SIMPlugins.AC;
 
-import com.SIMRacingApps.Car;
-import com.SIMRacingApps.Server;
-import com.SIMRacingApps.Session;
-import com.SIMRacingApps.Track;
+import com.SIMRacingApps.*;
+import com.SIMRacingApps.Data.State;
 
 /**
  * @author Harald Jagenteufel
@@ -14,7 +12,7 @@ import com.SIMRacingApps.Track;
 public class ACSession extends Session {
 
   private final ACSIMPlugin m_simPlugin;
-  private final ACCar m_carSelf;
+  private ACCar m_carSelf;
 
   public ACSession(ACSIMPlugin simPlugin) {
     super(simPlugin);
@@ -24,12 +22,53 @@ public class ACSession extends Session {
   }
 
   @Override
-  public Car getCar(String car) {
+  public ACCar getCar(String car) {
+    updateCar();
     return m_carSelf;
+  }
+
+  private void updateCar() {
+    if (!m_carSelf.isValid()) {
+      m_carSelf.initialize();
+    }
+  }
+
+  @Override
+  public Data getCars() {
+    Data d = super.getCars();
+    d.setState(State.OFF);
+    if (m_simPlugin.isConnected()) {
+      d.setValue(m_simPlugin.internals().getSessionStatic().numCars);
+      d.setState(State.NORMAL);
+    }
+    return d;
   }
 
   @Override
   public Track getTrack() {
     return new ACTrack(m_simPlugin);
+  }
+
+  @Override
+  public Data getMessages() {
+    final Data messages = super.getMessages();
+    messages.setValue(";;");
+    return messages;
+  }
+
+  @Override
+  public Data getType() {
+    final Data type = super.getType();
+    type.setValue(Type.PRACTICE);
+    type.setState(State.NORMAL);
+    return type;
+  }
+
+  @Override
+  public Data getId() {
+    final Data id = super.getId();
+    id.setValue("1");
+    id.setState(State.NORMAL);
+    return id;
   }
 }

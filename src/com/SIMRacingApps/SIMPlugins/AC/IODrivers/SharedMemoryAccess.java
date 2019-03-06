@@ -1,6 +1,7 @@
-package com.SIMRacingApps.SIMPlugins.IODrivers;
+package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
-import com.SIMRacingApps.SIMPlugins.IODrivers.jnaerator.SPageFilePhysics;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFilePhysics;
+import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFileStatic;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Windows;
 
@@ -20,6 +21,8 @@ public class SharedMemoryAccess {
   private boolean m_initialized = false;
   private Windows.Handle m_hMemMapFile;
   private Windows.Pointer m_pSharedMem;
+  private SPageFilePhysics physicsStruct;
+  private SPageFileStatic staticStruct;
 
   /**
    * call this method until it returns true
@@ -34,8 +37,9 @@ public class SharedMemoryAccess {
         m_pSharedMem = Windows.mapViewOfFile(m_hMemMapFile);
 
         if (m_pSharedMem != null) {
+          physicsStruct = new SPageFilePhysics(m_pSharedMem.get());
+          staticStruct = new SPageFileStatic(m_pSharedMem.get());
           Server.logger().info("ACSharedMemoryAccess init done");
-          // TODO is this all?
           m_initialized = true;
         }
         else {
@@ -62,7 +66,16 @@ public class SharedMemoryAccess {
 
   public SPageFilePhysics readPhysics() throws NotInitializedException {
     if (m_initialized) {
-      return PhysicsMemoryMapper.map(m_pSharedMem);
+      physicsStruct.read();
+      return physicsStruct;
+    }
+    throw new NotInitializedException();
+  }
+
+  public SPageFileStatic readStatic() throws NotInitializedException {
+    if (m_initialized) {
+      staticStruct.read();
+      return staticStruct;
     }
     throw new NotInitializedException();
   }
@@ -71,6 +84,7 @@ public class SharedMemoryAccess {
     if (m_initialized) {
       Windows.unmapViewOfFile(m_pSharedMem);
       Windows.closeHandle(m_hMemMapFile);
+      physicsStruct = null;
       m_initialized = false;
     }
   }

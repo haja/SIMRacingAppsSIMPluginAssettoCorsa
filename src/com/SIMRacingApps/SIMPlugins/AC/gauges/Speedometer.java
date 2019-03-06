@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.gauges;
+package com.SIMRacingApps.SIMPlugins.AC.gauges;
 
 import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Data;
@@ -12,17 +12,14 @@ import com.SIMRacingApps.SIMPlugins.AC.ACTrack;
  * @since 1.8
  * @license Apache License 2.0
  */
-public class ThrottleGauge extends ACGauge {
+public class Speedometer extends ACGauge {
 
-  private final ACSIMPlugin m_plugin;
-
-  public ThrottleGauge(ACSIMPlugin plugin, Car car) {
-    super(Type.THROTTLE, car, new ACTrack(plugin), null, null);
-    m_plugin = plugin;
+  public Speedometer(ACSIMPlugin plugin, Car car) {
+    super(Type.SPEEDOMETER, car, new ACTrack(plugin), null, null, plugin);
   }
 
   @Override
   public Data getValueCurrent(String UOM) {
-    return new Data(this.m_type, m_plugin.internals().getCurrentPhysics().gas,"%", State.NORMAL);
+    return new Data(this.m_type, plugin.internals().getCurrentPhysics().speedKmh, "km/h", State.NORMAL);
   }
 }

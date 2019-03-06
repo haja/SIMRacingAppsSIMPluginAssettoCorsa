@@ -1,4 +1,4 @@
-package com.SIMRacingApps.SIMPlugins.IODrivers.jnaerator;
+package com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
