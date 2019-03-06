@@ -23,7 +23,7 @@ public class Gear extends ACGauge {
     return new Data(this.m_type, getGear(), "", State.NORMAL);
   }
 
-  private String getGear() {
+  public String getGear() {
     final int gear = plugin.internals().getCurrentPhysics().gear;
     switch (gear) {
       case 0:

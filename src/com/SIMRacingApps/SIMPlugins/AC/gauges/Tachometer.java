@@ -14,8 +14,11 @@ import com.SIMRacingApps.SIMPlugins.AC.ACTrack;
  */
 public class Tachometer extends ACGauge {
 
-  public Tachometer(ACSIMPlugin plugin, Car car) {
+  private final Gear gearGauge;
+
+  public Tachometer(ACSIMPlugin plugin, Car car, Gear gearGauge) {
     super(Type.TACHOMETER, car, new ACTrack(plugin), null, null, plugin);
+    this.gearGauge = gearGauge;
 
     // somewhat arbitrary offset from max-rpms
     // TODO can we get that from sim? is there an algorithm for this?
@@ -30,7 +33,9 @@ public class Tachometer extends ACGauge {
 
   @Override
   public Data getValueCurrent(String UOM) {
-    return new Data(this.m_type, plugin.internals().getCurrentPhysics().rpms, "rev/min",
+    final Data data = new Data(this.m_type, plugin.internals().getCurrentPhysics().rpms, "rev/min",
         State.NORMAL);
+    String power = String.valueOf(plugin.internals().getSessionStatic().maxPower);
+    return _getReturnValue(data, UOM, gearGauge.getGear(), power);
   }
 }

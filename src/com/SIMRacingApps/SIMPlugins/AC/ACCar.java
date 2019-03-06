@@ -32,8 +32,9 @@ public class ACCar extends Car {
     _setGauge(new Brake(simPlugin, this));
     _setGauge(new Clutch(simPlugin, this));
     _setGauge(new BrakeBias(simPlugin, this));
-    _setGauge(new Gear(simPlugin, this));
-    _setGauge(new Tachometer(simPlugin, this));
+    final Gear gear = new Gear(simPlugin, this);
+    _setGauge(gear);
+    _setGauge(new Tachometer(simPlugin, this, gear));
     _setGauge(new Speedometer(simPlugin, this));
     _setGauge(new EnginePower(simPlugin, this));
 
