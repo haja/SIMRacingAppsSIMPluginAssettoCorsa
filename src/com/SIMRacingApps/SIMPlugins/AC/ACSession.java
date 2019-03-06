@@ -34,17 +34,6 @@ public class ACSession extends Session {
   }
 
   @Override
-  public Data getCars() {
-    Data d = super.getCars();
-    d.setState(State.OFF);
-    if (m_simPlugin.isConnected()) {
-      d.setValue(m_simPlugin.internals().getSessionStatic().numCars);
-      d.setState(State.NORMAL);
-    }
-    return d;
-  }
-
-  @Override
   public Track getTrack() {
     return new ACTrack(m_simPlugin);
   }
