@@ -8,7 +8,13 @@ import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFilePhysics;
 import com.SIMRacingApps.SIMPlugins.AC.IODrivers.jnaerator.SPageFileStatic;
 import com.SIMRacingApps.Server;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
+
 public class ACInternals {
+  private final static String TAG = "ACInternals: ";
 
   private final PhysicsAccessor physicsAccessor;
   private final SessionAccessor sessionAccessor;
@@ -17,17 +23,21 @@ public class ACInternals {
   private SPageFileStatic sessionStatic;
   private SPageFileGraphic currentGraphics;
   private volatile boolean initialized = false;
+  private List<Consumer<ACEvent>> eventListeners = new LinkedList<>();
+  private String prevSession;
 
   ACInternals() {
     physicsAccessor = new PhysicsAccessor(
         phy -> this.currentPhysics = phy
         , () -> this.initialized = false);
     sessionAccessor = new SessionAccessor(
-        sess -> this.sessionStatic = sess
-        , () -> {});
+        this::updateSession
+        , () -> {
+    });
     graphicsAccessor = new GraphicsAccessor(
         graph -> this.currentGraphics = graph
-        , () -> {});
+        , () -> {
+    });
   }
 
   public boolean isSessionRunning() {
@@ -56,7 +66,7 @@ public class ACInternals {
   }
 
   private boolean _init() {
-    Server.logger().info("ACInternals _init");
+    log("_init");
     initialized = physicsAccessor.start() &&
         sessionAccessor.start() &&
         graphicsAccessor.start();
@@ -69,4 +79,39 @@ public class ACInternals {
     sessionAccessor.stop();
     graphicsAccessor.stop();
   }
+
+  private void updateSession(SPageFileStatic sess) {
+    this.sessionStatic = sess;
+
+    if (prevSession == null) {
+      prevSession = sess.toString();
+
+    } else {
+      boolean sessionChanged = !prevSession.equals(sess.toString());
+      prevSession = sess.toString();
+      if (sessionChanged) {
+        log("session changed");
+        notify(new ACSessionChangedEvent());
+      }
+    }
+  }
+
+  private void log(String msg) {
+    Server.logger().info(TAG + msg);
+  }
+
+  private void notify(ACEvent event) {
+    eventListeners.forEach(a -> a.accept(event));
+  }
+
+  public void registerForEvent(Consumer<ACEvent> eventConsumer) {
+    eventListeners.add(eventConsumer);
+  }
+
+  public interface ACEvent {
+  }
+
+  public static class ACSessionChangedEvent implements ACEvent {
+  }
+
 }

@@ -5,6 +5,7 @@ import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Data.State;
 import com.SIMRacingApps.Gauge;
 import com.SIMRacingApps.SIMPlugins.AC.gauges.*;
+import com.SIMRacingApps.Server;
 
 /**
  * @author Harald Jagenteufel
@@ -14,17 +15,21 @@ import com.SIMRacingApps.SIMPlugins.AC.gauges.*;
  */
 public class ACCar extends Car {
 
+  private final static String TAG = "ACCar: ";
+
   private final ACSIMPlugin plugin;
   private boolean valid = false;
 
   public ACCar(ACSIMPlugin SIMPlugin) {
     super(SIMPlugin);
     plugin = SIMPlugin;
+    plugin.internals().registerForEvent(event -> initialize());
     initialize();
   }
 
   public void initialize() {
     if (!plugin.internals().isSessionRunning()) {
+      log("initialize: session not running");
       return;
     }
 
@@ -45,12 +50,22 @@ public class ACCar extends Car {
     m_carIdentifier = "I1";
 
     valid = true;
+    log("initialize: car initialized");
     _postInitialization();
+  }
+
+  private void log(String msg) {
+    Server.logger().info(TAG + msg);
   }
 
   @Override
   public boolean isValid() {
-    return valid && plugin.isConnected();
+    if (plugin.isConnected()) {
+      return valid;
+    } else {
+      valid = false;
+    }
+    return false;
   }
 
   @Override

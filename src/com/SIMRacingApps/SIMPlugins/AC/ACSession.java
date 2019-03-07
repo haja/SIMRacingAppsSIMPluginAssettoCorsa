@@ -13,11 +13,13 @@ public class ACSession extends Session {
 
   private final ACSIMPlugin plugin;
   private ACCar carSelf;
+  private ACTrack acTrack;
 
   public ACSession(ACSIMPlugin simPlugin) {
     super(simPlugin);
     plugin = simPlugin;
     carSelf = new ACCar(plugin);
+    acTrack = new ACTrack(plugin);
     Server.logger().info("Assetto Corsa Session Created");
   }
 
@@ -35,7 +37,7 @@ public class ACSession extends Session {
 
   @Override
   public ACTrack getTrack() {
-    return new ACTrack(plugin);
+    return acTrack;
   }
 
   @Override
