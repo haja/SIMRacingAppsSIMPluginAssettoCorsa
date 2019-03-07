@@ -5,6 +5,7 @@ import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Data.State;
 import com.SIMRacingApps.Gauge;
 import com.SIMRacingApps.SIMPlugins.AC.gauges.*;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Harald Jagenteufel
@@ -12,6 +13,7 @@ import com.SIMRacingApps.SIMPlugins.AC.gauges.*;
  * @since 1.8
  * @license Apache License 2.0
  */
+@Slf4j
 public class ACCar extends Car {
 
   private final ACSIMPlugin plugin;
@@ -24,7 +26,9 @@ public class ACCar extends Car {
   }
 
   public void initialize() {
+    log.info("initialize");
     if (!plugin.internals().isSessionRunning()) {
+      log.info("initialize: session not running");
       return;
     }
 
@@ -45,6 +49,7 @@ public class ACCar extends Car {
     m_carIdentifier = "I1";
 
     valid = true;
+    log.info("initialize: before postInit");
     _postInitialization();
   }
 

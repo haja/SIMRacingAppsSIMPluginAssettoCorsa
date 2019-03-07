@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="sra" name="SIMRacingApps-SIMPlugin-AC">
+<project basedir="."
+         default="sra"
+         name="SIMRacingApps-SIMPlugin-AC"
+         xmlns:ivy="antlib:org.apache.ivy.ant">
     <property name="plugin.name" value="AC" />
     <tstamp>
         <format property="build.time" pattern="yyyy.MM.dd.HH.mm.ss" />
@@ -30,9 +33,12 @@
     </path>
     <path id="SIMRacingAppsSIMPlugin.classpath">
         <pathelement location="classes"/>
+        <fileset dir="lib">
+            <include name="**/*.jar"/>
+        </fileset>
         <path refid="SIMRacingAppsServer.classpath"/>
     </path>
-    <target name="init">
+    <target name="init" depends="init-ivy">
         <mkdir dir="classes"/>
         <copy includeemptydirs="false" todir="classes">
             <fileset dir="src">
@@ -43,8 +49,9 @@
     </target>
     <target name="clean">
         <delete dir="classes"/>
+        <delete dir="lib"/>
     </target>
-    <target depends="init" name="build">
+    <target depends="init, resolve" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="classes" includeantruntime="false" source="${source}" target="${target}">
             <src path="src"/>
@@ -72,11 +79,51 @@
     <target name="sra" depends="build">
         <property file="${version.properties}" prefix="version" />
         <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
-        <zip destfile="${java.io.tmpdir}/SIMRacingAppsPlugin-${plugin.name}.sra" basedir="classes" />
+        <zip destfile="${java.io.tmpdir}/SIMRacingAppsPlugin-${plugin.name}.sra">
+            <fileset dir="classes"/>
+            <fileset dir="lib"/>
+        </zip>
     </target>
     <target name="installAsPlugin" depends="build">
         <property file="${version.properties}" prefix="version" />
         <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
         <copydir dest="${plugin.dir}" src="classes" />
+        <copydir dest="${plugin.dir}" src="lib" />
+    </target>
+
+
+    <!-- ivy setup -->
+    <property name="ivy.install.version" value="2.4.0"/>
+    <condition property="ivy.home" value="${env.IVY_HOME}">
+        <isset property="env.IVY_HOME"/>
+    </condition>
+    <property name="ivy.home" value="${user.home}/.ant"/>
+    <property name="ivy.jar.dir" value="${ivy.home}/lib"/>
+    <property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar"/>
+
+    <target name="download-ivy" unless="offline">
+
+        <mkdir dir="${ivy.jar.dir}"/>
+        <!-- download Ivy from web site so that it can be used even without any special installation -->
+        <get src="https://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+             dest="${ivy.jar.file}" usetimestamp="true"/>
+    </target>
+
+    <target name="init-ivy" depends="download-ivy">
+        <!-- try to load Ivy here from Ivy home, in case the user has not already dropped
+                it into Ant's lib dir (note that the latter copy will always take precedence).
+                We will not fail as long as local lib dir exists (it may be empty) and
+                Ivy is in at least one of Ant's lib dir or the local lib dir. -->
+        <path id="ivy.lib.path">
+            <fileset dir="${ivy.jar.dir}" includes="*.jar"/>
+
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml"
+                 uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target>
+
+    <!-- ivy resolve -->
+    <target name="resolve" description="--> retrieve dependencies with Ivy">
+        <ivy:retrieve/>
     </target>
 </project>
