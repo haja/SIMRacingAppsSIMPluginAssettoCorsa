@@ -5,6 +5,7 @@ import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Data.State;
 import com.SIMRacingApps.SIMPlugins.AC.ACSIMPlugin;
 import com.SIMRacingApps.SIMPlugins.AC.ACTrack;
+import com.SIMRacingApps.Server;
 
 /**
  * @author Harald Jagenteufel
@@ -13,6 +14,8 @@ import com.SIMRacingApps.SIMPlugins.AC.ACTrack;
  * @since 1.8
  */
 public class Tachometer extends ACGauge {
+
+  private final static String TAG = "ACTachometer: ";
 
   private final Gear gearGauge;
 
@@ -29,6 +32,9 @@ public class Tachometer extends ACGauge {
     _addStateRange("", "SHIFTLIGHTS", shiftLights, shift, "rev/min");
     _addStateRange("", "SHIFT", shift, shiftBlink, "rev/min");
     _addStateRange("", "SHIFTBLINK", shiftBlink, 999999.0, "rev/min");
+    double maxRpmMult = (double) maxRpm * getMultiplier().getDouble();
+    log("max rpm " + maxRpm + " max rpm multiplied " + maxRpmMult);
+    _setMaximum(maxRpmMult, "rev/min");
   }
 
   @Override
@@ -37,5 +43,9 @@ public class Tachometer extends ACGauge {
         State.NORMAL);
     String power = String.valueOf(plugin.internals().getSessionStatic().maxPower);
     return _getReturnValue(data, UOM, gearGauge.getGear(), power);
+  }
+
+  private void log(String msg) {
+    Server.logger().info(TAG + msg);
   }
 }
