@@ -72,7 +72,7 @@
     <target name="sra" depends="build">
         <property file="${version.properties}" prefix="version" />
         <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
-        <zip destfile="${java.io.tmpdir}/SIMRacingAppsPlugin-${plugin.name}.sra" basedir="classes" />
+        <zip destfile="${plugin.dir}/SIMRacingAppsPlugin-${plugin.name}.sra" basedir="classes" />
     </target>
     <target name="installAsPlugin" depends="build">
         <property file="${version.properties}" prefix="version" />
