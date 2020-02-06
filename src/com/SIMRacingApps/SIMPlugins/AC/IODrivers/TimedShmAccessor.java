@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020 Harald Jagenteufel.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.SIMRacingApps.SIMPlugins.AC.IODrivers;
 
 import com.SIMRacingApps.Server;
@@ -89,7 +105,7 @@ public abstract class TimedShmAccessor<S extends Structure> {
           }
         }
         else {
-          if (Windows.getLastError() != Windows.ERROR_FILE_NOT_FOUND) {        //don't print file doesn't exists. iRacing may not be running
+          if (Windows.getLastError() != Windows.ERROR_FILE_NOT_FOUND) {        //don't print file doesn't exists. AC may not be running
             Server.logger().severe(String.format(
                 "Error(%d) opening Shared Memeory %s",
                 Windows.getLastError(),
