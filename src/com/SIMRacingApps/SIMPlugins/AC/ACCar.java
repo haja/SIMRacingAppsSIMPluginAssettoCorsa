@@ -46,6 +46,7 @@ public class ACCar extends Car {
     _setGauge(new Throttle(plugin, this));
     _setGauge(new Brake(plugin, this));
     _setGauge(new Clutch(plugin, this));
+    _setGauge(new Steering(plugin, this));
     _setGauge(new BrakeBias(plugin, this));
     final Gear gear = new Gear(plugin, this);
     _setGauge(gear);
